@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ReplicationController
+metadata: 
+  name: nginx-rc
+  labels: 
+    env: demo
+spec:
+  # This will be the template for creating new pods
+  template: 
+    metadata:
+      name: nginx-pod
+      labels:
+        env: demo
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx
+  replicas: 3

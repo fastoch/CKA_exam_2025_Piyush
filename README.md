@@ -639,28 +639,61 @@ or
 
 ---
 
-# 10. K8s Deployment, Replication Controller and ReplicaSet explained
+# 10. K8s Deployment, ReplicationController and ReplicaSet 
+
+## Deployment
+
+A **Deployment** is a higher-level construct that allows you to define a desired state for a set of pods, 
+and the **Replication Controller** will ensure that the pods are running in the desired state.  
 
 ## Self-healing & High-Availability
 
 A **ReplicaSet** = multiple identical instances of a pod  
 
-When a pod crashes, the **Replication Controller** detects it and immediately creates a new pod to replace it.  
-The Replication Controller is also responsible for **routing** the incoming **traffic** to one of the active pods, which implies **load balancing** functionality.  
+When a pod crashes, the **Replication Controller** detects it and immediately creates a new Pod to replace it.  
+
+The Replication Controller is also responsible for **routing** the incoming **traffic** to one of the active pods, 
+which implies **load balancing** capability.  
 
 **High-Availability** (**HA**) is crucial to ensure your application never crashes.  
 If we set the number of replicas for a given pod to 4, the replication controller will make sure we always have 4 healthy replicas running.  
 
-And if the user traffic increases to the point where the set number of replicas is not enough to handle it, we can increment our number of pod replicas on-the-fly.
-This is called **horizontal pod autoscaling** (**HPA**).  
-Scaling deployments (up or down) can also be done manually .  
+If the user traffic increases to the point where the number of replicas is not enough to handle it, 
+we can increment our number of pod replicas on-the-fly. This is called **horizontal pod autoscaling** (**HPA**).  
 
-And if traffic increases to the point where a particular node is out of resources and cannot create any additional pods.  
-We can then ask K8s to spin up a new node (a new VM), because yes, the same replication controller can span multiple nodes.  
+Of course, scaling deployments (up or down) can also be done manually.  
+
+If traffic increases to the point where a particular **node** is out of resources and cannot create any additional pods, 
+we can then ask K8s to spin up a new node (a new VM), because yes, the same replication controller can span multiple nodes.  
+
+Example Replication Controller manifest (file name: rc.yaml):
+```yaml
+apiVersion: v1
+kind: ReplicationController
+metadata: 
+  name: nginx-rc
+  labels: 
+    env: demo
+spec:
+  # This will be the template for creating new pods
+  template: 
+    metadata:
+      name: nginx-pod
+      labels:
+        env: demo
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx
+  replicas: 3
+```
+For the apiVersion property, if not sure about the value, run `kubectl explain rc`  
+Now, if we run `kubectl apply -f rc.yaml`, we'll have a Replication Controller with 3 pods running.  
+We can also run `kubectl get rc` to see the Replication Controller.  
 
 
 
-10/35
+16/35
 video 9/59
 
 ---
