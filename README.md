@@ -91,7 +91,8 @@ Let's break down what it does:
   - this last CMD instruction is the one that starts our container, along with the application that will run inside of it
 
 >[!note]
->it is recommended to leave **blank lines** between instructions (FROM, WORKDIR, COPY, RUN, CMD) for improving parsing and readability of our Dockerfile.
+>it is recommended to leave **blank lines** between instructions (FROM, WORKDIR, COPY, RUN, CMD) 
+>for improving parsing and readability of our Dockerfile.
 
 ## Explaining the Dockerfile's role
 
@@ -259,7 +260,8 @@ COPY --from=installer /app/build /usr/share/nginx/html
 
 ## Explaining the new version of our Dockerfile
 
-This multi-stage Dockerfile builds a Node.js app in a first stage, and serves the output via Nginx in a second stage, leveraging Docker's layer caching for faster rebuilds.  
+This multi-stage Dockerfile builds a Node.js app in a first stage, and serves the output via Nginx in a second stage, 
+leveraging Docker's layer caching for faster rebuilds.  
 
 Each instruction creates a cacheable layer, and Docker skips re-execution if inputs match previous builds.  
 
@@ -268,8 +270,8 @@ Let's explain these instructions in details:
 - second line sets the working directory
 - third line copies only package files first; this layer caches if `package.json/package-lock.json` remain unchanged,
   enabling `RUN npm install` (next layer) to reuse the "node_modules" folder without reinstalling dependencies
-- fourth line only runs if changes occur in the package files 
-- fifth line copies all source code, invalidating prior caches if files change
+- this fourth line only runs if changes occur in the package files 
+- the fifth line copies all source code, invalidating prior caches if files change
 - `RUN npm run build` then compiles to /app/build/, creating the final artifacts
 - the next line begins the "deployer" stage, creating a minimal web server image, and discarding the "installer" stage
 - the final line copies the built static files from stage 1 into Nginx's default directory; no further instructions means Nginx serves on port 80
