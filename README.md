@@ -648,11 +648,10 @@ or
 A **Deployment** is a higher-level construct that allows you to define a desired state for a set of pods, 
 and the **Replication Controller** will ensure that the pods are running in the desired state.  
 
-## Self-healing & High-Availability
-
-A **ReplicaSet** = multiple identical instances of a pod  
+## ReplicationController 
 
 When a pod crashes, the **Replication Controller** detects it and immediately creates a new Pod to replace it.  
+This feature is called **self-healing**.  
 
 The Replication Controller is also responsible for **routing** the incoming **traffic** to one of the active pods, 
 which implies **load balancing** capability.  
@@ -668,7 +667,7 @@ Of course, scaling deployments (up or down) can also be done manually.
 If traffic increases to the point where a particular **node** is out of resources and cannot create any additional pods, 
 we can then ask K8s to spin up a new node (a new VM), because yes, the same replication controller can span multiple nodes.  
 
-Example Replication Controller manifest (file name: rc.yaml):
+Example ReplicationController manifest (file name: rc.yaml):
 ```yaml
 apiVersion: v1
 kind: ReplicationController
@@ -692,10 +691,58 @@ spec:
 For the apiVersion property, if not sure about the value, run `kubectl explain rc`  
 Now, if we run `kubectl apply -f rc.yaml`, we'll have a Replication Controller with 3 pods running.  
 We can also run `kubectl get rc` to see the Replication Controller.  
+And `kubectl get pods` to see the pods.  
+
+## ReplicaSet
+
+ReplicationController = the legacy version  
+ReplicaSet = the newer version  
+
+Example ReplicaSet manifest (file name: rs.yaml):  
+```yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata: 
+  name: nginx-rs
+  labels: 
+    env: demo
+spec:
+  # This will be the template for creating new pods
+  template: 
+    metadata:
+      name: nginx-pod
+      labels:
+        env: demo
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx
+  replicas: 3
+  # This section defines which pods the ReplicaSet is responsible for
+  selector:
+    matchLabels:
+      env: demo
+```
+As you can see, the main differences are the apiVersion value and the `spec.selector` section.  
+I we run `kubectl explain rs`, we can see the apiVersion is `apps/v1` because groups is `apps` and version is `v1`.  
+
+In a ReplicaSet manifest, the `spec.selector` section defines which Pods the ReplicaSet is responsible for managing.  
+The labels in `spec.template.metadata.labels` of the ReplicaSet must match the selector; otherwise the API rejects the object, 
+because the controller would never see its own Pods.  
+
+As usual, run `kubectl apply -f rs.yaml` to create a ReplicaSet and `kubectl get rs` to see the ReplicaSet.  
+Run `kubectl get pods` to see the pods.  
+
+We can delete ReplicaSet and ReplicationController by running `kubectl delete rs <name>` and `kubectl delete rc <name>` respectively.  
+
+### Updating our ReplicaSet
+
+There are 2 ways of doing that:
+1. Update the manifest and run `kubectl apply -f rs.yaml`
+2. Edit the ReplicaSet via `kubectl edit rs <name>`, then write and quit (Vim) to apply changes
 
 
-
-16/35
+21/35
 video 9/59
 
 ---

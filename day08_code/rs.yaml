@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata: 
+  name: nginx-rs
+  labels: 
+    env: demo
+spec:
+  # This will be the template for creating new pods
+  template: 
+    metadata:
+      name: nginx-pod
+      labels:
+        env: demo
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx
+  replicas: 3
+  # This section defines which pods the ReplicaSet is responsible for
+  selector:
+    matchLabels:
+      env: demo
