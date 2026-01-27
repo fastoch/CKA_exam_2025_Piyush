@@ -641,7 +641,7 @@ or
 
 ---
 
-# 10. K8s Deployment, ReplicationController and ReplicaSet 
+# 10. K8s ReplicationController, ReplicaSet, and Deployment
 
 ## ReplicationController (legacy)
 
@@ -741,11 +741,59 @@ There are 3 ways of doing that:
 
 It provides some additional functionality to the ReplicaSet object.  
 We create a Deployment that will in turn create a ReplicaSet.  
+Then the ReplicaSet will in turn create Pods.  
+
+The Deployment is the recommended way to deploy apps in K8s.
+
+Here's a Deployment manifest example (file name: deploy.yaml):
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: nginx-deploy
+  labels: 
+    env: demo
+spec:
+  # This will be the template for creating new pods
+  template: 
+    metadata:
+      name: nginx-pod
+      labels:
+        env: demo
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx
+  replicas: 3
+  # This section defines which pods the ReplicaSet is responsible for
+  selector:
+    matchLabels:
+      env: demo
+```
+Run `kubectl apply -f deploy.yaml` to create the Deployment and `kubectl get deploy` to see the Deployment.  
+
+To see all K8s objects in your cluster, run `kubectl get all`  
+
+### Modifying the image in a Deployment
+
+To modify the Nginx version used in the Deployment, run the following command:
+```bash
+kubectl set image deploy nginx-deploy nginx=nginx:1.8.2
+```
+
+To show the rollout history:
+```bash
+kubectl rollout history deploy nginx-deploy
+```
+
+To rollback to the previous version:
+```bash
+kubectl rollout undo deploy nginx-deploy
+```
 
 
 
-
-24/35
+31/35
 video 9/59
 
 ---
