@@ -367,6 +367,9 @@ More on context switching later on...
 It communicates with the Kubernetes API server to perform operations like deploying applications, inspecting resources, and managing cluster state.   
 `kubectl` enables CRUD operations (create, read, update, delete) on Kubernetes resources such as pods, deployments, services, and nodes.  
 
+Useful resource:  
+https://kubernetes.io/docs/reference/kubectl/quick-reference/#viewing-and-finding-resources
+
 ## Control Plane Components
 
 ### API server
@@ -791,10 +794,17 @@ To rollback to the previous version:
 kubectl rollout undo deploy nginx-deploy
 ```
 
+# 11. Kubernetes Services
+
+## ClusterIP
+
+## NodePort
+
+## LoadBalancer
 
 
-31/35
-video 9/59
+0/46
+video 10/59
 
 ---
 
