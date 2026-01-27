@@ -643,12 +643,7 @@ or
 
 # 10. K8s Deployment, ReplicationController and ReplicaSet 
 
-## Deployment
-
-A **Deployment** is a higher-level construct that allows you to define a desired state for a set of pods, 
-and the **Replication Controller** will ensure that the pods are running in the desired state.  
-
-## ReplicationController 
+## ReplicationController (legacy)
 
 When a pod crashes, the **Replication Controller** detects it and immediately creates a new Pod to replace it.  
 This feature is called **self-healing**.  
@@ -693,7 +688,7 @@ Now, if we run `kubectl apply -f rc.yaml`, we'll have a Replication Controller w
 We can also run `kubectl get rc` to see the Replication Controller.  
 And `kubectl get pods` to see the pods.  
 
-## ReplicaSet
+## ReplicaSet (newer)
 
 ReplicationController = the legacy version  
 ReplicaSet = the newer version  
@@ -737,12 +732,20 @@ We can delete ReplicaSet and ReplicationController by running `kubectl delete rs
 
 ### Updating our ReplicaSet
 
-There are 2 ways of doing that:
-1. Update the manifest and run `kubectl apply -f rs.yaml`
-2. Edit the ReplicaSet via `kubectl edit rs <name>`, then write and quit (Vim) to apply changes
+There are 3 ways of doing that:
+1. Edit the manifest, save changes, and run `kubectl apply -f rs.yaml`
+2. Edit the ReplicaSet directly via `kubectl edit rs <ReplicaSet_name>`, then write and quit to apply changes
+3. Run `kubectl scale --replicas=5 rs <ReplicaSet_name>`
+
+## Deployment
+
+It provides some additional functionality to the ReplicaSet object.  
+We create a Deployment that will in turn create a ReplicaSet.  
 
 
-21/35
+
+
+24/35
 video 9/59
 
 ---

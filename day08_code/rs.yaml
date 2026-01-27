@@ -15,7 +15,7 @@ spec:
       containers:
       - name: nginx-container
         image: nginx
-  replicas: 3
+  replicas: 4
   # This section defines which pods the ReplicaSet is responsible for
   selector:
     matchLabels:
