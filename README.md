@@ -798,12 +798,31 @@ kubectl rollout undo deploy nginx-deploy
 
 ## ClusterIP
 
+This type of service is the default one.  
+It is used for internal communication between pods in a cluster.
+
 ## NodePort
+
+The range for NodePorts is from 30000 to 32767.  
+We have to specify a static port within that range.  
+
+A NodePort service is used for external communication between pods and the outside world: 
+- inside the pods, the app is listening on the specified **targetPort**
+- outside the pods and inside the cluster, the service is listening on the specified **port**
+- outside the cluster, the service is listening on the specified **nodePort**
+
+The NodePort will load balance the incoming traffic between the multiple nodes on which our pods are running.  
+
+Example: day09_code/NodePort.yaml
+
+## ExternalName
+
+
 
 ## LoadBalancer
 
 
-0/46
+10/46
 video 10/59
 
 ---
