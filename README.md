@@ -812,6 +812,7 @@ A NodePort service is used for external communication between pods and the outsi
 - outside the cluster, the service is listening on the specified **nodePort**
 
 The NodePort will load balance the incoming traffic between the multiple nodes on which our pods are running.  
+Knowing the IP of one of our nodes and the NodePort, we can access the service from outside the cluster.  
 
 Example: day09_code/NodePort.yaml
 
@@ -822,7 +823,7 @@ Example: day09_code/NodePort.yaml
 ## LoadBalancer
 
 
-10/46
+18/46
 video 10/59
 
 ---
