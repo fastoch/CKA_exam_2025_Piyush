@@ -823,7 +823,7 @@ Example: day09_code/NodePort.yaml
 ## LoadBalancer
 
 
-18/46
+24/46
 video 10/59
 
 ---

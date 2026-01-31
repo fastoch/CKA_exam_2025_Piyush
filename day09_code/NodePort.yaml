@@ -10,6 +10,5 @@ spec:
     - nodePort: 30001 # the port on which the service will be exposed on the nodes
       port: 80        # the port on which the service is listening inside all nodes
       targetPort: 80  # the port on which the container inside the pod is listening
-  # the selector that is used to identify which pods the Service should route traffic to
-  selector: 
+  selector: # specify which pods the Service should route traffic to
     env: demo
