@@ -814,7 +814,15 @@ A NodePort service is used for external communication between pods and the outsi
 The NodePort will load balance the incoming traffic between the multiple nodes on which our pods are running.  
 Knowing the IP of one of our nodes and the NodePort, we can access the service from outside the cluster.  
 
-Example: day09_code/NodePort.yaml
+Example: day09_code/NodePort.yaml  
+
+As usual, run `kubectl apply -f NodePort.yaml` to create the Service and `kubectl get svc` to see the Service.  
+
+>[!note]
+>Since we're using kind to run our cluster, we need to delete the cluster, then create it again after updating 
+>the manifest as mentioned in the video:  
+>https://youtu.be/tHAQWLKMTB0?si=NC2rV7hkcZOJLFVV&t=1072
+
 
 ## ExternalName
 
@@ -823,7 +831,7 @@ Example: day09_code/NodePort.yaml
 ## LoadBalancer
 
 
-24/46
+25/46 (need to update the day06/cluster2-config.yaml and re-create the cluster > 17:45)
 video 10/59
 
 ---
