@@ -3,5 +3,10 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
+  # this section is for mapping extra ports from the nodes to the host machine
+  # it is required when using Kind for running a homelab cluster
+  extraPortMappings: 
+  - containerPort: 30001 # it's actually the node port
+    hostPort: 30001
 - role: worker
 - role: worker

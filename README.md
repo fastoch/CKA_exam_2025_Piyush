@@ -431,7 +431,7 @@ There are different ways you can install Kubernetes on your local machine:
 - Minikube
 - k3s
 - k3d
-- Kind
+- **Kind**
 
 We will use Kind, which stands for **K**ubernetes **in** **D**ocker, a tool for running local Kubernetes clusters using Docker containers as nodes.  
 
@@ -458,7 +458,7 @@ Before creating our first cluster with kind, we need to install `kubectl`.
 Check the version of `kubectl` currently recommended for preparing the CKA exam.  
 
 To check your `kubectl` version: `kubectl version`  
-Ideally, `kubectl` version should match your Kubernetes version.  
+Ideally, `kubectl` version (client) should match your Kubernetes version (server).  
 
 Adapt the following command to match your version of `kubectl`:
 ```bash
@@ -477,7 +477,7 @@ Currently, we only have one node, which is the control plane.
 
 And to show the default pods created for our new clutser: `kubectl get pods -A`  
 
-We can also run `kubectl version` to check if our version of `kubectl` (client) matches our control plane node's version (server).  
+Don't forget to run `kubectl version` to check if your version of `kubectl` (client) matches your control plane node's version (server).  
 
 ## Creating a multi-node cluster
 
@@ -808,21 +808,43 @@ We have to specify a static port within that range.
 
 A NodePort service is used for external communication between pods and the outside world: 
 - inside the pods, the app is listening on the specified **targetPort**
-- outside the pods and inside the cluster, the service is listening on the specified **port**
+- outside the pods and inside the cluster nodes, the service is listening on the specified **port**
 - outside the cluster, the service is listening on the specified **nodePort**
 
-The NodePort will load balance the incoming traffic between the multiple nodes on which our pods are running.  
+The NodePort will load balance incoming traffic between the nodes on which our pods are running.  
 Knowing the IP of one of our nodes and the NodePort, we can access the service from outside the cluster.  
 
-Example: day09_code/NodePort.yaml  
+Example: `day09_code/NodePort.yaml`  
 
 As usual, run `kubectl apply -f NodePort.yaml` to create the Service and `kubectl get svc` to see the Service.  
 
+---
+
 >[!note]
->Since we're using kind to run our cluster, we need to delete the cluster, then create it again after updating 
->the manifest as mentioned in the video:  
+>Since we're using Kind (Kubernetes in Docker) to run our cluster, we need to delete the cluster, 
+>then create it again after updating the manifest as mentioned in the video:  
 >https://youtu.be/tHAQWLKMTB0?si=NC2rV7hkcZOJLFVV&t=1072
 
+If we had an actual production cluster, we wouldn't need any extra config to make our NodePort service accessible.  
+But since we're in a homelab and using Kind, we need to map extra ports from the nodes to the host machine with the
+`extraPortMappings` option.  
+
+We can see that extra option in the `day06_code` folder > `cluster2-config.yaml` file.  
+
+After adding the `extraPortMappings` option, we can :
+- run `kind delete cluster --name <cluster_name>` to delete the cluster, 
+- run `sudo dnf remove kubernetes1.34-client` to remove the `kubectl` binary because current K8s version is 1.35
+- run `sudo dnf install kubernetes1.35-client` to install the new `kubectl` binary
+- run `kind create cluster --config day06_code/cluster2-config.yaml --name cka-cluster3` to create the cluster  
+- run `kubectl version` to make sure client version matches the server version
+
+**Personal note**: to create the cluster, I need to enter my GPG key for `pass` (the Linux password manager) > line 470.  
+
+Once our new cluster is up and running, run `kubectl apply -f day08_code/deploy.yaml` to recreate our Nginx deployment.  
+And finally, we can run `kubectl apply -f day09_codeNodePort.yaml` to create the Service.  
+
+Now, if run `curl localhost:30001`, we get the Nginx welcome page.  
+We can also open a web browser and go to http://localhost:30001/ to see the Nginx page.
 
 ## ExternalName
 
@@ -831,7 +853,7 @@ As usual, run `kubectl apply -f NodePort.yaml` to create the Service and `kubect
 ## LoadBalancer
 
 
-25/46 (need to update the day06/cluster2-config.yaml and re-create the cluster > 17:45)
+26/46 
 video 10/59
 
 ---
