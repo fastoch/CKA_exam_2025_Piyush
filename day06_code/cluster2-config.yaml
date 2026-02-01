@@ -1,12 +1,12 @@
-# three node (two workers) cluster config
+# three nodes (two workers) cluster config
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
-  # this section is for mapping extra ports from the nodes to the host machine
-  # it is required when using Kind for running a homelab cluster
+  # next section is for mapping extra ports from the nodes to the host machine
+  # it is required when using Kind 
   extraPortMappings: 
-  - containerPort: 30001 # it's actually the node port
+  - containerPort: 30001 # it's actually the node port but kind nodes are Docker containers
     hostPort: 30001
 - role: worker
 - role: worker

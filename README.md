@@ -806,7 +806,7 @@ It is used for internal communication between pods in a cluster.
 The range for NodePorts is from 30000 to 32767.  
 We have to specify a static port within that range.  
 
-A NodePort service is used for external communication between pods and the outside world: 
+A NodePort service is used for external communication between our pods and the outside world: 
 - inside the pods, the app is listening on the specified **targetPort**
 - outside the pods and inside the cluster nodes, the service is listening on the specified **port**
 - outside the cluster, the service is listening on the specified **nodePort**
@@ -831,6 +831,10 @@ But since we're in a homelab and using Kind, we need to map extra ports from the
 
 We can see that extra option in the `day06_code` folder > `cluster2-config.yaml` file.  
 
+>[!important]
+>Inside the `extraPortMappings` section, the option that maps node ports to the host machine 
+>is named`containerPort` because Kind nodes are Docker containers.  
+
 After adding the `extraPortMappings` option, we can :
 - run `kind delete cluster --name <cluster_name>` to delete the cluster, 
 - run `sudo dnf remove kubernetes1.34-client` to remove the `kubectl` binary because current K8s version is 1.35
@@ -841,10 +845,26 @@ After adding the `extraPortMappings` option, we can :
 **Personal note**: to create the cluster, I need to enter my GPG key for `pass` (the Linux password manager) > line 470.  
 
 Once our new cluster is up and running, run `kubectl apply -f day08_code/deploy.yaml` to recreate our Nginx deployment.  
-And finally, we can run `kubectl apply -f day09_codeNodePort.yaml` to create the Service.  
+And finally, we can run `kubectl apply -f day09_code/NodePort.yaml` to create the Service.  
 
 Now, if run `curl localhost:30001`, we get the Nginx welcome page.  
-We can also open a web browser and go to http://localhost:30001/ to see the Nginx page.
+We can also open a web browser and go to http://localhost:30001/ to see the Nginx page.  
+
+---
+
+On a production cluster, the Nginx welcome page would be accessible through one of the worker node's IP address on port 30001.  
+
+### Tip: create an alias for the kubectl command
+
+- go to your home directory via `cd`
+- open your bash profile via `vi .bash_profile`
+- add the following line at the end of the file: `alias k=kubectl`
+- write and quit
+- run `source .bash_profile` to make the change effective
+- now you can simply run `k get all` to see all K8s objects in your current cluster context
+
+30/46 
+video 10/59
 
 ## ExternalName
 
@@ -853,8 +873,6 @@ We can also open a web browser and go to http://localhost:30001/ to see the Ngin
 ## LoadBalancer
 
 
-26/46 
-video 10/59
 
 ---
 
