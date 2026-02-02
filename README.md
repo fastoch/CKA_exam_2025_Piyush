@@ -796,11 +796,6 @@ kubectl rollout undo deploy nginx-deploy
 
 # 11. Kubernetes Services
 
-## ClusterIP
-
-This type of service is the default one.  
-It is used for internal communication between pods in a cluster.
-
 ## NodePort
 
 The range for NodePorts is from 30000 to 32767.  
@@ -863,7 +858,41 @@ On a production cluster, the Nginx welcome page would be accessible through one 
 - run `source .bash_profile` to make the change effective
 - now you can simply run `k get all` to see all K8s objects in your current cluster context
 
-30/46 
+## ClusterIP
+
+This type of service is the default one.  
+It is used for internal communication between pods in a cluster.  
+
+Since pods are ephemeral, their IP addresses are also ephemeral.  
+This means that if a pod is killed and replaced by a new one, the new pod gets a different IP address.  
+
+A ClusterIP Service gives your Pods a stable, virtual IP that is only reachable inside the cluster.  
+Clients inside the cluster just use the Service name;  
+Kubernetes DNS resolves that name to the ClusterIP, which then load-balances traffic across matching Pods.  
+
+If you run `kubectl get svc` right after cluster creation, you'll see the default ClusterIP Service.  
+
+To create our own ClusterIP Service, we can write a manifest such as this one:
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: clusterip-svc
+  labels:
+    env: demo
+spec:
+  type: ClusterIP
+  selector:
+    env: demo
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+```
+Then, run `kubectl apply -f day09_code/ClusterIP.yaml` to create the Service.
+
+
+35/46 
 video 10/59
 
 ## ExternalName
