@@ -899,13 +899,22 @@ Then, run `kubectl apply -f day09_code/ClusterIP.yaml` to create the Service.
 A Service of type NodePort exposes a port on every node’s IP address, and forwards traffic from <NodeIP>:<NodePort> 
 to the backing ClusterIP Service and then to the pods.  
 
-For production, you often put a proper load balancer or ingress in front, which talks to the NodePort 
+For production, you often put a proper **LoadBalancer** or **ingress** in front, which talks to the NodePort 
 (or directly to a LoadBalancer-type Service) rather than exposing all nodes directly.  
 
+A NodePort service is suitable for exposing pods inside a private network.  
+But you cannot give your users multiple private IP addresses and port numbers to access your app.  
+Your users will access your app through one single URL, which in most cases matches one public IP address.  
+
+A LoadBalancer Service is what we need for exposing pods (running our app) on the Internet.  
+
+Kubernetes does not come with LoadBalancer Services included.  
+We need to rely on cloud providers to provision an external LoadBalancer service for our K8s cluster.    
 
 
 
-38/46 
+
+41/46 
 video 10/59
 
 ## ExternalName
