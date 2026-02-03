@@ -798,6 +798,9 @@ kubectl rollout undo deploy nginx-deploy
 
 ## NodePort
 
+As the name indicates, a NodePort service makes pods accessible from outside the cluster as long as you 
+have the IP address of one of the nodes and the number of the port on which the service is listening.  
+
 The range for NodePorts is from 30000 to 32767.  
 We have to specify a static port within that range.  
 
@@ -849,7 +852,7 @@ We can also open a web browser and go to http://localhost:30001/ to see the Ngin
 
 On a production cluster, the Nginx welcome page would be accessible through one of the worker node's IP address on port 30001.  
 
-### Tip: create an alias for the kubectl command
+### Tip: creating an alias for the kubectl command
 
 - go to your home directory via `cd`
 - open your bash profile via `vi .bash_profile`
@@ -891,8 +894,18 @@ spec:
 ```
 Then, run `kubectl apply -f day09_code/ClusterIP.yaml` to create the Service.
 
+## LoadBalancer
 
-35/46 
+A Service of type NodePort exposes a port on every node’s IP address, and forwards traffic from <NodeIP>:<NodePort> 
+to the backing ClusterIP Service and then to the pods.  
+
+For production, you often put a proper load balancer or ingress in front, which talks to the NodePort 
+(or directly to a LoadBalancer-type Service) rather than exposing all nodes directly.  
+
+
+
+
+38/46 
 video 10/59
 
 ## ExternalName
