@@ -796,6 +796,39 @@ kubectl rollout undo deploy nginx-deploy
 
 # 11. Kubernetes Services
 
+## ClusterIP
+
+This type of service is the default one.  
+It is used for internal communication between pods in a cluster.  
+
+Since pods are ephemeral, their IP addresses are also ephemeral.  
+This means that if a pod is killed and replaced by a new one, the new pod gets a different IP address.  
+
+A ClusterIP Service gives your Pods a stable, virtual IP that is only reachable inside the cluster.  
+Clients inside the cluster just use the Service name;  
+Kubernetes DNS resolves that name to the ClusterIP, which then load-balances traffic across matching Pods.  
+
+If you run `kubectl get svc` right after cluster creation, you'll see the default ClusterIP Service.  
+
+To create our own ClusterIP Service, we can write a manifest such as this one:
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: clusterip-svc
+  labels:
+    env: demo
+spec:
+  type: ClusterIP
+  selector:
+    env: demo
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+```
+Then, run `kubectl apply -f day09_code/ClusterIP.yaml` to create the Service.
+
 ## NodePort
 
 As the name indicates, a NodePort service makes pods accessible from outside the cluster as long as you 
@@ -861,39 +894,6 @@ On a production cluster, the Nginx welcome page would be accessible through one 
 - run `source .bash_profile` to make the change effective
 - now you can simply run `k get all` to see all K8s objects in your current cluster context
 
-## ClusterIP
-
-This type of service is the default one.  
-It is used for internal communication between pods in a cluster.  
-
-Since pods are ephemeral, their IP addresses are also ephemeral.  
-This means that if a pod is killed and replaced by a new one, the new pod gets a different IP address.  
-
-A ClusterIP Service gives your Pods a stable, virtual IP that is only reachable inside the cluster.  
-Clients inside the cluster just use the Service name;  
-Kubernetes DNS resolves that name to the ClusterIP, which then load-balances traffic across matching Pods.  
-
-If you run `kubectl get svc` right after cluster creation, you'll see the default ClusterIP Service.  
-
-To create our own ClusterIP Service, we can write a manifest such as this one:
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: clusterip-svc
-  labels:
-    env: demo
-spec:
-  type: ClusterIP
-  selector:
-    env: demo
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
-```
-Then, run `kubectl apply -f day09_code/ClusterIP.yaml` to create the Service.
-
 ## LoadBalancer
 
 A Service of type NodePort exposes a port on every node’s IP address, and forwards traffic from <NodeIP>:<NodePort> 
@@ -909,13 +909,28 @@ Your users will access your app through one single URL, which in most cases matc
 A LoadBalancer Service is what we need for exposing pods (running our app) on the Internet.  
 
 Kubernetes does not come with LoadBalancer Services included.  
-We need to rely on cloud providers to provision an external LoadBalancer service for our K8s cluster.    
+We need to rely on cloud providers to provision an external LoadBalancer service for our K8s cluster.   
+
+Example: `day09_code/LoadBalancer.yaml`  
+As usual, run `kubectl apply -f LoadBalancer.yaml` to create the Service and `kubectl get svc` to see the Service.  
+
+Note that the NodePort and ClusterIP don't have an external IP, which is normal.  
+But the LoadBalancer has an external IP status set to <pending>, which is a placeholder until the load balancer is ready.  
+
+The reason why we don't have an external IP for our LoadBalancer is because we haven't provisioned an external 
+LoadBalancer for our K8s cluster.  
+
+## ExternalName
+
+An ExternalName in Kubernetes is a way to make a Service inside the cluster resolve to an external DNS name.  
+It acts as a DNS alias: requests to the in-cluster service name are redirected to the external address you specify.  
+
+# 12. Multi-container Pods & Namespaces 
 
 
 
-
-41/46 
-video 10/59
+0/28  
+video 11/59
 
 ## ExternalName
 
