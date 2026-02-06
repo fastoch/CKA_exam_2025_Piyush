@@ -927,9 +927,21 @@ It acts as a DNS alias: requests to the in-cluster service name are redirected t
 
 # 12. Multi-container Pods & Namespaces 
 
+## Namespaces 
+
+They provide an additional layer of isolation within our cluster.  
+When we create K8s objects without specifying a namespace, they are created in the default namespace.  
+But we can create multiple namespaces and put K8s objects in different namespaces.  
+
+We can assign different permissions and different RBAC (role-based access control) rules to each of our namespaces.  
+
+Pods within the same namespace can talk to each other.  
+But pods in different namespaces cannot talk to each other, at least not directly.  
+Pods in different namespaces can only talk to each other by using FQDNs (fully-qualified domain names).  
 
 
-0/28  
+
+4/28  
 video 11/59
 
 ## ExternalName
