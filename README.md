@@ -974,8 +974,18 @@ And then run `kubectl apply -f my-namespace.yaml` to create the namespace.
 
 To delete a namespace, run `kubectl delete ns <namespace_name>`.  
 
+### Creating K8s resources inside a namespace
 
-10/28  
+To create a Deployment inside a namespace, run the following command:
+```bash
+kubectl create deploy webserver --image=nginx -n my-namespace
+```
+
+Then, run `kubectl get deploy -n my-namespace` to see the Deployment.  
+
+
+
+14/28  
 video 11/59
 
 ## ExternalName
