@@ -942,6 +942,7 @@ Pods in different namespaces can only coomunicate by using FQDNs (fully-qualifie
 ### Default namespaces
 
 Right after creating a K8s cluster, we can show the default namespaces by running `kubectl get ns`.  
+
 The 5 default namespaces are:
 - default
 - kube-node-lease
@@ -949,16 +950,32 @@ The 5 default namespaces are:
 - kube-system
 - local-path-storage
 
+At first, the default namespace only contains a ClusterIP service.  
+kube-node-lease and kube-public are empty.  
+kube-system is where Kubernetes control plane components run.  
+local-path-storage is where the local storage provisioner runs.
+
 ### Namespace commands
 
-We can create a new namespace by running `kubectl create namespace <namespace_name>`.  
-Then, we can switch to the new namespace by running `kubectl config set-context --current --namespace=<namespace_name>`.  
+We can create a new namespace by running `kubectl create ns <namespace_name>`.  
+Then, we can switch to the new namespace by running `kubectl config set-context --current -n <namespace_name>`.  
 
-To know what resources are in a namespace, run `kubectl get all --namespace=<namespace_name>`.  
+To know what resources are in a specific namespace, run `kubectl get all -n <namespace_name>`.  
+
+Of course, namespaces can be created imperatively using the above command, but we can also 
+create them declaratively by writing a YAML file:
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: my-namespace
+```
+And then run `kubectl apply -f my-namespace.yaml` to create the namespace.  
+
+To delete a namespace, run `kubectl delete ns <namespace_name>`.  
 
 
-
-6/28  
+10/28  
 video 11/59
 
 ## ExternalName
