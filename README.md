@@ -929,19 +929,36 @@ It acts as a DNS alias: requests to the in-cluster service name are redirected t
 
 ## Namespaces 
 
-They provide an additional layer of isolation within our cluster.  
-When we create K8s objects without specifying a namespace, they are created in the default namespace.  
+They provide an additional layer of isolation within a cluster.  
+When we create K8s objects without specifying a namespace, they are created in the "default" namespace.  
 But we can create multiple namespaces and put K8s objects in different namespaces.  
 
-We can assign different permissions and different RBAC (role-based access control) rules to each of our namespaces.  
+We can assign different permissions and different RBACs (role-based access control) to each of our namespaces.  
 
-Pods within the same namespace can talk to each other.  
-But pods in different namespaces cannot talk to each other, at least not directly.  
-Pods in different namespaces can only talk to each other by using FQDNs (fully-qualified domain names).  
+Pods within the same namespace can easily talk to each other.  
+But pods in different namespaces cannot communicate, at least not directly.  
+Pods in different namespaces can only coomunicate by using FQDNs (fully-qualified domain names).  
+
+### Default namespaces
+
+Right after creating a K8s cluster, we can show the default namespaces by running `kubectl get ns`.  
+The 5 default namespaces are:
+- default
+- kube-node-lease
+- kube-public
+- kube-system
+- local-path-storage
+
+### Namespace commands
+
+We can create a new namespace by running `kubectl create namespace <namespace_name>`.  
+Then, we can switch to the new namespace by running `kubectl config set-context --current --namespace=<namespace_name>`.  
+
+To know what resources are in a namespace, run `kubectl get all --namespace=<namespace_name>`.  
 
 
 
-4/28  
+6/28  
 video 11/59
 
 ## ExternalName
