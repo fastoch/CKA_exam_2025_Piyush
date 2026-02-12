@@ -982,10 +982,18 @@ kubectl create deploy webserver --image=nginx -n my-namespace
 ```
 
 Then, run `kubectl get deploy -n my-namespace` to see the Deployment.  
+We can also run `kubectl get pods -n my-namespace` to see the pods.  
+
+### Communication between pods in different namespaces
+
+Let's create a namespace called 'demo': `kubectl create ns demo`  
+Now, let's create a deployment inside this namespace: `kubectl create deploy nginx-demo --image=nginx -n demo`  
+Now, let's create a deployment inside the default namespace: `kubectl create deploy nginx-default --image=nginx`  
+
+Now, we want to check if the pod in the demo namespace can reach the pod in the default namespace.  
 
 
-
-14/28  
+13/28  
 video 11/59
 
 ## ExternalName
