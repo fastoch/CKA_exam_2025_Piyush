@@ -992,8 +992,24 @@ Now, let's create a deployment inside the default namespace: `kubectl create dep
 
 Now, we want to check if the pod in the demo namespace can reach the pod in the default namespace.  
 
+To get the name of the pod running in the demo namespace:  
+`kubectl get pods -n demo`  
 
-13/28  
+To get the IP address of the pod running inside the default namespace:  
+`kubectl get pods -o wide`
+
+Now, we'll exec into the pod running inside the demo namespace:  
+`kubectl exec -it <demo_pod_name> -n demo -- bash`  
+
+We can then run `curl <default_pod_IP>`  
+We should get the HTML code from the Nginx welcome page.  
+Which proves that the pod in the demo namespace can reach the pod in the default namespace.  
+
+We can follow the same logic to check if the pod in the default namespace can reach the pod in the demo namespace.  
+And this will also work.  
+
+
+14/28  
 video 11/59
 
 ## ExternalName
