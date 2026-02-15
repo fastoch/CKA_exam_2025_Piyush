@@ -9,7 +9,8 @@
 
 ## What problem did Docker solve?
 
-Docker primarily solves the "it works on my machine" problem in software development by packaging applications with everything required to run them into portable units called "containers".​  
+Docker primarily solves the "it works on my machine" problem in software development by packaging applications with everything required 
+to run them into portable units called "containers".​  
 
 Containers ensure consistent runtime environments across development, testing, and production, eliminating issues from differing OS versions, libraries, or configurations.  
 
@@ -38,8 +39,8 @@ A **Dockerfile** is a set of **instructions** in YAML format, for example:
 - create those volumes for data persistence
 - run this command to build the image
 
-A Docker image is the format we use to ship our application to a registry, so that other users or members of our team can then pull that image to 
-create containers that run our application. We call such applications "containerized applications".  
+A Docker image is the format we use to ship our application to a registry, so that other users or members of our team can then pull 
+that image to create containers that run our application. We call such applications "containerized applications".  
 
 The most popular image registry is **Docker Hub**.
 
@@ -166,7 +167,8 @@ The second line is to authenticate to my DockerHub account.
 The last line pushes this replica to our DockerHub registry.  
 
 >[!important]
-You might need to install and initialize `pass`, a program that handles authentication for commands such as `docker login` or `nerdctl login`.
+You might need to install and initialize `pass`, a program that handles authentication for commands such as 
+`docker login` or `nerdctl login`.
 For more details: https://docs.rancherdesktop.io/getting-started/installation/#pass-setup
 -  once you've installed pass, create a GPG key via `gpg --generate-key`. This will be used by `pass` to secure secrets.
 -  save your passphrase for this GPG key in a password manager (other than pass...)
@@ -274,7 +276,8 @@ Let's explain these instructions in details:
 - the fifth line copies all source code, invalidating prior caches if files change
 - `RUN npm run build` then compiles to /app/build/, creating the final artifacts
 - the next line begins the "deployer" stage, creating a minimal web server image, and discarding the "installer" stage
-- the final line copies the built static files from stage 1 into Nginx's default directory; no further instructions means Nginx serves on port 80
+- the final line copies the built static files from stage 1 into Nginx's default directory; no further instructions means 
+- Nginx serves on port 80
 
 ## Leveraging Docker's "layer caching"
 
@@ -290,10 +293,12 @@ During `docker build`, Docker scans instructions sequentially:
 
 ## Why should we use multi-stage for building our Docker images?
 
-Multi-stage builds separate build-time dependencies (Node/npm) from runtime needs (Nginx), reducing image size, improving security, and speeding up deployments.
+Multi-stage builds separate build-time dependencies (Node/npm) from runtime needs (Nginx), reducing image size, improving security, 
+and speeding up deployments.
 What results of the first stage is not included in the final image.  
 
-Combining Docker's layer caching capability and Multi-stage image building allows us to optimize our image size and to deploy our application faster.  
+Combining Docker's layer caching capability and Multi-stage image building allows us to optimize our image size and to deploy our 
+application faster.  
 
 ## Rebuilding an image with our new Dockerfile
 
@@ -364,7 +369,11 @@ Developers and Kubernetes admins use `kubectl` for deployment, scaling, troubles
 More on context switching later on...
 
 `kubectl` is the command-line interface (CLI) tool for interacting with Kubernetes clusters.  
-It communicates with the Kubernetes API server to perform operations like deploying applications, inspecting resources, and managing cluster state.   
+It communicates with the Kubernetes API server to perform operations like:
+- deploying applications, 
+- inspecting resources, 
+- and managing cluster state.   
+
 `kubectl` enables CRUD operations (create, read, update, delete) on Kubernetes resources such as pods, deployments, services, and nodes.  
 
 Useful resource:  
@@ -408,7 +417,8 @@ Every worker node has a kubelet and a kube-proxy component.
 
 ### kubelet
 
-The kubelet serves as the primary node agent in Kubernetes, running on each worker node to manage containers and ensure the node's desired state matches the cluster's specifications.  
+The kubelet serves as the primary node agent in Kubernetes, running on each worker node to manage containers and ensure the node's 
+desired state matches the cluster's specifications.  
 
 It acts as a bridge between the Kubernetes control plane and the local node, handling pod lifecycle operations.  
 
@@ -421,7 +431,8 @@ The kube-apiserver component will then register corresponding changes in the etc
 This commponent enables networking within the worker node.  
 It allows pods inside the worker node to communicate with each other by creating iptable rules.  
 
-`kube-proxy` translates Service abstractions into actual network rules, enabling communication between Services and their backend Pods without exposing dynamic Pod IPs directly.  
+`kube-proxy` translates Service abstractions into actual network rules, enabling communication between Services and their backend Pods 
+without exposing dynamic Pod IPs directly.  
 
 ---
 
@@ -433,7 +444,8 @@ There are different ways you can install Kubernetes on your local machine:
 - k3d
 - **Kind**
 
-We will use Kind, which stands for **K**ubernetes **in** **D**ocker, a tool for running local Kubernetes clusters using Docker containers as nodes.  
+We will use Kind, which stands for **K**ubernetes **in** **D**ocker, a tool for running local Kubernetes clusters using Docker containers 
+as nodes.  
 
 ## Installing Kind 
 
@@ -990,25 +1002,71 @@ Now, let's create a deployment inside the default namespace: `kubectl create dep
 
 Now, we want to check if the pod in the demo namespace can reach the pod in the default namespace.  
 
-To get the name of the pod running in the demo namespace:  
-`kubectl get pods -n demo`  
-
-To get the IP address of the pod running inside the default namespace:  
-`kubectl get pods -o wide`
-
-Now, we'll exec into the pod running inside the demo namespace:  
-`kubectl exec -it <demo_pod_name> -n demo -- bash`  
-
-We can then run `curl <default_pod_IP>`  
-We should get the HTML code from the Nginx welcome page.  
+- Get the name of the pod running in the demo namespace: `kubectl get pods -n demo`  
+- Get the IP address of the pod running inside the default namespace: `kubectl get pods -o wide`
+- exec into the pod running inside the demo namespace: `kubectl exec -it <demo_pod_name> -n demo -- bash`  
+- run `curl <default_pod_IP>`  
+- 
+The curl command should return the HTML code from the Nginx welcome page.  
 Which proves that the pod in the demo namespace can reach the pod in the default namespace.  
 
 We can follow the same logic to check if the pod in the default namespace can reach the pod in the demo namespace.  
 And this will also work.  
 
+---
 
-16/28  
-video 11/59
+Pods in different Kubernetes namespaces can communicate because namespaces provide logical isolation, not network isolation.  
+
+Kubernetes clusters implement a flat, routable pod network where every pod gets a unique IP address reachable from any other pod, 
+regardless of node or namespace.  
+
+This design follows the core networking model: pods communicate directly without NAT or proxies across the cluster.  
+Namespaces organize resources like Deployments and Services but don't segment the underlay network by default.  
+
+---
+
+## Scaling up our deployments and exposing them via services
+
+We can scale up our deployments by running:  
+`kubectl scale --replicas=3 deploy nginx-demo -n demo`  
+and  
+`kubectl scale --replicas=3 deploy nginx-default`  
+
+We can then expose our deployments by running:  
+`kubectl expose deploy nginx-demo --name=svc-demo --port 80 -n demo`  
+and  
+`kubectl expose deploy nginx-default --name=svc-default --port 80`
+
+## Accessing services from different namespaces via FQDN
+
+FQDN = Fully Qualified Domain Name  
+
+Now, can a pod from the demo namespace reach the service in the default namespace?  
+- exec into one of the pods running inside the demo namespace: `kubectl exec -it -n demo <demo_pod_name> -- bash`  
+- run `curl svc-default` > you'll get a "could not resolve host"
+- we need to exec into a pod running in the default namespace and run `cat /etc/resolve.conf` to see the FQDN
+  - the FQDN is default.svc.cluster.local
+- now we can exec back into a pod running in the demo namespace and run `curl svc-default.default.svc.cluster.local`
+  - this will work this time and we'll get the Nginx welcome page
+
+Note that, to have our pods reach the services, we could have used the IP address of the service instead of the FQDN.  
+To get the IP address of the services: `kubectl get svc -A`  
+
+## About communication between pods in different namespaces
+
+It's better to use services to communicate between pods in different namespaces, be it via FQDN or IP address.  
+Because pods can die and don't have a static IP address.  
+
+Services provide a stable IP address and a DNS name, which makes communication between pods more reliable.  
+
+---
+
+# 13. Multi-container Pods: Sidecar vs Init Container
+
+
+
+1/25
+video 12/59
 
 ---
 
@@ -1019,13 +1077,15 @@ video 11/59
 K8s assigns each pod a unique IP address.  
 All containers in a pod share the same network **namespace** and IP address, each container having its own port.  
 
-The K8s networking model requires that every pod can reach every other pod in the cluster without NAT (network address translation), across all nodes.   
+The K8s networking model requires that every pod can reach every other pod in the cluster without NAT (network address translation), 
+across all nodes.   
 
 This flat, NAT-free network greatly simplifies connectivity, discovery, and debugging because source IPs are preserved and packets do not traverse complex translation layers.  
 
 ## What problem do Kubernetes Services solve?
 
-Because pods are **ephemeral**, so are their IP address, which is why Kubernetes introduced **Services**, so that pods can be reached through stable virtual IPs.
+Because pods are **ephemeral**, so are their IP address, which is why Kubernetes introduced **Services**, so that pods can be reached 
+through stable virtual IPs.
 
 ---
 
