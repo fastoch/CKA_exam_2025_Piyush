@@ -925,9 +925,7 @@ LoadBalancer for our K8s cluster.
 An ExternalName in Kubernetes is a way to make a Service inside the cluster resolve to an external DNS name.  
 It acts as a DNS alias: requests to the in-cluster service name are redirected to the external address you specify.  
 
-# 12. Multi-container Pods & Namespaces 
-
-## Namespaces 
+# 12. Namespaces 
 
 They provide an additional layer of isolation within a cluster.  
 When we create K8s objects without specifying a namespace, they are created in the "default" namespace.  
@@ -939,7 +937,7 @@ Pods within the same namespace can easily talk to each other.
 But pods in different namespaces cannot communicate, at least not directly.  
 Pods in different namespaces can only coomunicate by using FQDNs (fully-qualified domain names).  
 
-### Default namespaces
+## Default namespaces
 
 Right after creating a K8s cluster, we can show the default namespaces by running `kubectl get ns`.  
 
@@ -955,7 +953,7 @@ kube-node-lease and kube-public are empty.
 kube-system is where Kubernetes control plane components run.  
 local-path-storage is where the local storage provisioner runs.
 
-### Namespace commands
+## Namespace commands
 
 We can create a new namespace by running `kubectl create ns <namespace_name>`.  
 Then, we can switch to the new namespace by running `kubectl config set-context --current -n <namespace_name>`.  
@@ -974,7 +972,7 @@ And then run `kubectl apply -f my-namespace.yaml` to create the namespace.
 
 To delete a namespace, run `kubectl delete ns <namespace_name>`.  
 
-### Creating K8s resources inside a namespace
+## Creating K8s resources inside a namespace
 
 To create a Deployment inside a namespace, run the following command:
 ```bash
@@ -984,7 +982,7 @@ kubectl create deploy webserver --image=nginx -n my-namespace
 Then, run `kubectl get deploy -n my-namespace` to see the Deployment.  
 We can also run `kubectl get pods -n my-namespace` to see the pods.  
 
-### Communication between pods in different namespaces
+## Communication between pods in different namespaces
 
 Let's create a namespace called 'demo': `kubectl create ns demo`  
 Now, let's create a deployment inside this namespace: `kubectl create deploy nginx-demo --image=nginx -n demo`  
@@ -1009,16 +1007,8 @@ We can follow the same logic to check if the pod in the default namespace can re
 And this will also work.  
 
 
-14/28  
+16/28  
 video 11/59
-
-## ExternalName
-
-
-
-## LoadBalancer
-
-
 
 ---
 
