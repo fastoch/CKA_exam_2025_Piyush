@@ -1063,9 +1063,12 @@ Services provide a stable IP address and a DNS name, which makes communication b
 
 # 13. Multi-container Pods: Sidecar vs Init Container
 
+- An init container (initialization container) is a container that runs before the app container starts.  
+- A sidecar container (or helper container) is a container that runs alongside the app container.
 
 
-1/25
+
+5/25
 video 12/59
 
 ---
