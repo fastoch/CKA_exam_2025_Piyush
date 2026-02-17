@@ -1066,9 +1066,12 @@ Services provide a stable IP address and a DNS name, which makes communication b
 - An init container (initialization container) is a container that runs before the app container starts.  
 - A sidecar container (or helper container) is a container that runs alongside the app container.
 
+see day11_code folder > multi-pod.yaml  
 
+Now, if we cd into the day11_code folder and run `kubectl apply -f multi-pod.yaml`, this will create our 
+multicontainer-pod, but we can see that the app container is not running yet.  
 
-5/25
+12/25  
 video 12/59
 
 ---
