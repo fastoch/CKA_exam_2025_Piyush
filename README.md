@@ -1066,12 +1066,28 @@ Services provide a stable IP address and a DNS name, which makes communication b
 - An init container (initialization container) is a container that runs before the app container starts.  
 - A sidecar container (or helper container) is a container that runs alongside the app container.
 
-see day11_code folder > multi-pod.yaml  
+The manifest file for this chapter is in the day11_code folder > multi-pod.yaml  
 
 Now, if we cd into the day11_code folder and run `kubectl apply -f multi-pod.yaml`, this will create our 
-multicontainer-pod, but we can see that the app container is not running yet.  
+multicontainer-pod.  
 
-12/25  
+But if we run `kubectl get pods` we'll see the status is "Init: 0/1".  
+We can also run `kubectl logs pod/myapp` to see that our pod is not started yet.  
+
+Our pod is stuck in initialization state because the service specified in the manifest file doesn't exist.  
+We need to provision this service.  
+
+- First, let's create a basic deployment:  
+`kubectl create deploy nginx-deploy --image=nginx --port=80`  
+- Then, we can expose this deployment by creating a service:  
+`kubectl expose deploy nginx-deploy --name myservice --port 80`  
+
+Note that the service needs to be named "myservice", as specified in the manifest file, line 23.  
+
+Now, if we run `kubectl get pods` once again, we'll see the status of our myapp pod is "Running: 1/1".  
+
+
+18/25  
 video 12/59
 
 ---
