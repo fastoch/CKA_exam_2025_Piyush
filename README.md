@@ -1084,10 +1084,13 @@ We need to provision this service.
 
 Note that the service needs to be named "myservice", as specified in the manifest file, line 23.  
 
-Now, if we run `kubectl get pods` once again, we'll see the status of our myapp pod is "Running: 1/1".  
+Now, if we run `kubectl get pods` once again, we'll see the status of our myapp pod is "Running".  
+And we can run `kubectl exec -it myapp -- sh` to access the pod.  
+Then, run `echo $FIRSTNAME` to see the value of the FIRSTNAME environment variable we've set up in our manifest file.  
 
 
-18/25  
+
+20/25  
 video 12/59
 
 ---

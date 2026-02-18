@@ -9,7 +9,7 @@ spec:
   - name: myapp-container
     image: busybox
     # invoke the sh shell and execute a command string (the pod keeps running for 1 hour)
-    command: ['sh', '-c', 'echo the app is running && sleep 3600']
+    command: ['sh', '-c', 'echo The app is running && sleep 3600']
     # environment variables (scoped to the container)
     env:
     - name: FIRSTNAME
@@ -20,4 +20,4 @@ spec:
     # invoke the sh shell and execute a command string passed as the next argument
     command: ['sh', '-c']
     # display "waiting for my service" every 2 seconds until the myservice service is available
-    args: ['until nslookup myservice.default.svc.cluster.local; do echo waiting for myservice; sleep 2; done']
+    args: ['until nslookup myservice.default.svc.cluster.local; do echo waiting for myservice to be up; sleep 2; done']
