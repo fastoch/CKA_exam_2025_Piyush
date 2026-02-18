@@ -1088,10 +1088,12 @@ Now, if we run `kubectl get pods` once again, we'll see the status of our myapp 
 And we can run `kubectl exec -it myapp -- sh` to access the pod.  
 Then, run `echo $FIRSTNAME` to see the value of the FIRSTNAME environment variable we've set up in our manifest file.  
 
+# 14. Daemon sets, jobs, and cron jobs
 
 
-20/25  
-video 12/59
+
+1/19  
+video 13/59
 
 ---
 
