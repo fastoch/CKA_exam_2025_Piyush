@@ -1090,9 +1090,22 @@ Then, run `echo $FIRSTNAME` to see the value of the FIRSTNAME environment variab
 
 # 14. Daemon sets, jobs, and cron jobs
 
+## Daemonsets
+
+DaemonSets ensure a pod runs on every node (or a selected subset) in a cluster, automatically scaling with node additions.  
+They differ from Deployments by focusing on node coverage rather than replica counts.  
+
+Common usecases for daemonsets are monitoring, logging, and security.  
+
+One native daemonset example is kube-proxy, which ensures that every node in the cluster has a working kube-proxy daemon.  
+kube-proxy translates Service abstractions into actual network rules, enabling communication between Services and their backend Pods.  
+
+## Jobs and Cron Jobs
 
 
-1/19  
+
+
+3/19  
 video 13/59
 
 ---
